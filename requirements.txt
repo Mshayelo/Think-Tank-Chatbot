@@ -1,16 +1,12 @@
-python-dotenv  # Environment variable management
-uuid  # Unique filename generation
-datetime  # Time-based operations
+python-dotenv
 
-# Backend (Flask + Azure SDKs)
-flask  # Web framework
-requests  # HTTP API calls
-openai  # Azure OpenAI client
-azure-search-documents  # Azure Cognitive Search
-azure-core  # Azure authentication
-azure-identity  # Identity authentication
-azure-storage-blob  # Blob storage operations
-azure-ai-formrecognizer  # Azure Document Intelligence
+flask  
+requests
+openai  
+azure-search-documents  
+azure-core
+azure-identity
+azure-storage-blob
+azure-ai-formrecognizer  
 
-# Frontend (Streamlit)
-streamlit  # Web UI for chatbot
+streamlit  
