@@ -1,11 +1,6 @@
-# Think Tank AI Document Chatbot (Frontend) 
-
-# This Streamlit app provides a chat interface for two modes:
-# 1. Chat with indexed documents (Azure Cognitive Search)
-# 2. Chat with newly uploaded documents (Azure Document Intelligence + GPT)
-
 import streamlit as st
 import requests  # Used to communicate with Flask backend
+import os
 
 # Set up basic page configuration
 st.set_page_config(page_title="Think Tank AI Chatbot", page_icon="🤖", layout="wide")
@@ -35,9 +30,12 @@ if "doc_text" not in st.session_state:
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []  # Chat history for uploaded document
 
+# Get the backend URL from the environment variable (set by Azure)
+backend_url = os.getenv("BACKEND_URL", "http://backend:$PORT")  # Use internal service address in Azure
+
 # MODE 1: Chat with Indexed Documents (Azure Cognitive Search)
 if mode == "Chat with Indexed Docs":
-    st.markdown("###  Chat History")
+    st.markdown("### Chat History")
     # Display previous chat messages
     for message in st.session_state.messages:
         with st.chat_message(message["role"]):
@@ -47,7 +45,7 @@ if mode == "Chat with Indexed Docs":
     if prompt := st.chat_input("Ask about indexed documents..."):
         # Save user's message to session
         st.session_state.messages.append({"role": "user", "content": prompt})
-        
+
         # Display user message
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -56,14 +54,14 @@ if mode == "Chat with Indexed Docs":
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             try:
-                response = requests.post("http://127.0.0.1:5000/chat", json={"message": prompt})
+                response = requests.post(f"{backend_url}/chat", json={"message": prompt})
                 ai_response = response.json()["response"]
                 message_placeholder.markdown(ai_response)
                 st.session_state.messages.append({"role": "assistant", "content": ai_response})
             except Exception as e:
                 message_placeholder.markdown(f"Error: {str(e)}")
 
-# === MODE 2: Upload Document and Chat (Document Intelligence + GPT) ===
+#  MODE 2: Upload Document and Chat (Document Intelligence + GPT)
 elif mode == "Ask Question About Uploaded Doc":
     st.markdown("### 📄 Upload a document")
     # Upload field for PDFs or TXT files
@@ -74,18 +72,18 @@ elif mode == "Ask Question About Uploaded Doc":
         if st.button("Extract & Load Document"):
             with st.spinner("Uploading and analyzing..."):
                 try:
-                    res = requests.post("http://127.0.0.1:5000/extract_text", files={"file": uploaded_doc})
+                    res = requests.post(f"{backend_url}/extract_text", files={"file": uploaded_doc})
                     result = res.json()
                     # Store the extracted text in session
                     st.session_state.doc_text = result["text"]
                     st.session_state.chat_history = []  # Reset history
-                    st.success(" Document loaded. You can now ask questions.")
+                    st.success("Document loaded. You can now ask questions.")
                 except Exception as e:
                     st.error(f"Error: {str(e)}")
 
     # Once text is loaded, allow chat with memory
     if st.session_state.doc_text:
-        st.markdown("###  Chat History")
+        st.markdown("### Chat History")
         # Display previous chat messages with this document
         for message in st.session_state.chat_history:
             with st.chat_message(message["role"]):
@@ -104,7 +102,7 @@ elif mode == "Ask Question About Uploaded Doc":
                 message_placeholder = st.empty()
                 try:
                     res = requests.post(
-                        "http://127.0.0.1:5000/followup_chat",
+                        f"{backend_url}/followup_chat",
                         json={
                             "doc": st.session_state.doc_text,
                             "history": st.session_state.chat_history
