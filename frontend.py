@@ -54,7 +54,7 @@ if mode == "Chat with Indexed Docs":
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             try:
-                response = requests.post(f"{backend_url}/chat", json={"message": prompt})
+                response = requests.post("http://localhost:5000/chat", json={"message": "hello"})
                 ai_response = response.json()["response"]
                 message_placeholder.markdown(ai_response)
                 st.session_state.messages.append({"role": "assistant", "content": ai_response})
@@ -72,7 +72,7 @@ elif mode == "Ask Question About Uploaded Doc":
         if st.button("Extract & Load Document"):
             with st.spinner("Uploading and analyzing..."):
                 try:
-                    res = requests.post(f"{backend_url}/extract_text", files={"file": uploaded_doc})
+                    res = requests.post(f"http://localhost:5000/extract_text", files={"file": uploaded_doc})
                     result = res.json()
                     # Store the extracted text in session
                     st.session_state.doc_text = result["text"]
