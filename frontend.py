@@ -73,7 +73,7 @@ elif mode == "Ask Question About Uploaded Doc":
             with st.spinner("Uploading and analyzing..."):
                 try:
 
-                    res = requests.post(f"https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/extract_text", files={"file": uploaded_doc})
+                    res = requests.post("https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/extract_text", files={"file": uploaded_doc})
                     result = res.json()
                     # Store the extracted text in session
                     st.session_state.doc_text = result["text"]
@@ -102,8 +102,7 @@ elif mode == "Ask Question About Uploaded Doc":
             with st.chat_message("assistant"):
                 message_placeholder = st.empty()
                 try:
-                    res = requests.post(
-                        f"https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/followup_chat",
+                    res = requests.post("https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/followup_chat",
                         json={
                             "doc": st.session_state.doc_text,
                             "history": st.session_state.chat_history
