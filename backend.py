@@ -72,19 +72,14 @@ def home():
 
 # Chat with Indexed Documents (Cognitive Search)
 @app.route("/chat", methods=["POST"])
-@app.route("/chat", methods=["POST"])
 def chat():
     try:
         data = request.get_json()
-
-        # Debug Log Incoming Request
-        app.logger.info(f"Received data: {data}")
-
-        if not data:  #  Handle empty request
+        if not data:
             return jsonify({"error": "Invalid request: No JSON received"}), 400
 
         message = data.get("message", "")
-        if not message:  #  Handle missing message
+        if not message:
             return jsonify({"error": "Invalid request: No message provided"}), 400
 
         response = client.chat.completions.create(
@@ -94,14 +89,10 @@ def chat():
             messages=[{"role": "user", "content": message}]
         )
 
-        # Log AI Response
-        app.logger.info(f"AI Response: {response.choices[0].message.content}")
-
-        return jsonify({"answer": response.choices[0].message.content})  #  Ensure JSON Response
+        return jsonify({"answer": response.choices[0].message.content})
 
     except Exception as e:
-        app.logger.error(f"Error in /chat: {str(e)}")  #  Log actual error
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e)}), 500  #  Always return JSON on error
 
 def chatbot_query(user_input):
     # Configuration for Azure Cognitive Search as a data source
