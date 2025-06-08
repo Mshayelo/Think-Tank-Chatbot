@@ -54,7 +54,7 @@ if mode == "Chat with Indexed Docs":
         with st.chat_message("assistant"):
             message_placeholder = st.empty()
             try:
-                response = requests.post("http://localhost:5000/chat", json={"message": "hello"})
+                response = requests.post("https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/chat", json={"message": prompt})
                 ai_response = response.json()["response"]
                 message_placeholder.markdown(ai_response)
                 st.session_state.messages.append({"role": "assistant", "content": ai_response})
@@ -72,7 +72,8 @@ elif mode == "Ask Question About Uploaded Doc":
         if st.button("Extract & Load Document"):
             with st.spinner("Uploading and analyzing..."):
                 try:
-                    res = requests.post(f"http://localhost:5000/extract_text", files={"file": uploaded_doc})
+
+                    res = requests.post(f"https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/extract_text", files={"file": uploaded_doc})
                     result = res.json()
                     # Store the extracted text in session
                     st.session_state.doc_text = result["text"]
@@ -102,7 +103,7 @@ elif mode == "Ask Question About Uploaded Doc":
                 message_placeholder = st.empty()
                 try:
                     res = requests.post(
-                        f"{backend_url}/followup_chat",
+                        f"("https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/followup_chat",
                         json={
                             "doc": st.session_state.doc_text,
                             "history": st.session_state.chat_history
