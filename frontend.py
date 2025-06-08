@@ -103,7 +103,7 @@ elif mode == "Ask Question About Uploaded Doc":
                 message_placeholder = st.empty()
                 try:
                     res = requests.post(
-                        f"("https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/followup_chat",
+                        f"https://think-tank-ai9-ghera5e8a2enembp.southafricanorth-01.azurewebsites.net/followup_chat",
                         json={
                             "doc": st.session_state.doc_text,
                             "history": st.session_state.chat_history
