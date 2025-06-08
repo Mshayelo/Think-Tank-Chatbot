@@ -68,4 +68,4 @@ jobs:
         with:
           app-name: 'think-tank-ai9'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4DE85B117E394092956444ABD4C8B849 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_617093DD5E2A48FEBBB0506EBB0F8AF9 }}
